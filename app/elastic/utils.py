@@ -1,4 +1,4 @@
-from typing import Union, Iterable
+from typing import Union
 
 from elasticsearch_dsl import connections
 from elasticsearch_dsl.response import AggResponse
