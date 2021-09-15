@@ -48,6 +48,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - ELASTICSEARCH_URL=${ELASTICSEARCH_URL:-http://elasticsearch:9200}
+      - ELASTICSEARCH_TIMEOUT=20
     networks: [ frontend, backend ]
     volumes:
       - fastapi-data:/var/lib/fastapi/data

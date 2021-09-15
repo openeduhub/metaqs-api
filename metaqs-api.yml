@@ -38,6 +38,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - ELASTICSEARCH_TIMEOUT=20
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:80/_ping" ]
       interval: 30s
