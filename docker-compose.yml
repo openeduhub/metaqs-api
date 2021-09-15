@@ -41,7 +41,7 @@ services:
       - API_KEY=${API_KEY}
       - PROJECT_NAME="MetaQS API"
       - API_VERSION=${API_VERSION:-v1}
-      - LOG_LEVEL=error
+      - LOG_LEVEL=info
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
       - POSTGRES_HOST=postgres
       - POSTGRES_DB=oeh
@@ -51,7 +51,7 @@ services:
     networks: [ frontend, backend ]
     volumes:
       - fastapi-data:/var/lib/fastapi/data
-#    command: uvicorn app.main:app --host 0.0.0.0 --port 80 --log-level error
+#    command: uvicorn app.main:app --host 0.0.0.0 --port 80 --log-level info
 
 #  redis:
 #    container_name: redis
