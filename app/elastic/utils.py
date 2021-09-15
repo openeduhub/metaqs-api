@@ -8,6 +8,7 @@ from app.core.config import (
     ELASTICSEARCH_URL,
     ELASTICSEARCH_TIMEOUT,
 )
+from app.core.logging import logger
 from .fields import (
     Field,
     FieldType,
@@ -15,6 +16,7 @@ from .fields import (
 
 
 async def connect_to_elastic():
+    logger.debug(f"Attempt to open connection: {ELASTICSEARCH_URL}")
     connections.create_connection(
         hosts=[ELASTICSEARCH_URL], timeout=ELASTICSEARCH_TIMEOUT
     )
