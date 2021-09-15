@@ -1,7 +1,13 @@
+from pprint import pformat
+
 from elasticsearch_dsl import Search as ElasticSearch
 from starlette_context import context
 
-from app.core.config import ELASTIC_INDEX
+from app.core.config import (
+    DEBUG,
+    ELASTIC_INDEX,
+)
+from app.core.logging import logger
 from .fields import Field
 from .utils import handle_text_field
 
@@ -22,7 +28,13 @@ class Search(ElasticSearch):
         return super(Search, self).sort(*[handle_text_field(key) for key in keys])
 
     def execute(self, ignore_cache=False):
+        if DEBUG:
+            logger.debug(f"Sending query to elastic:\n{pformat(self.to_dict())}")
+
         response = super(Search, self).execute(ignore_cache=ignore_cache)
+
+        if DEBUG:
+            logger.debug(f"Response received from elastic:\n{pformat(response.to_dict())}")
 
         context["elastic_queries"] = context.get("elastic_queries", []) + [
             {"query": self.to_dict(), "response": response.to_dict()}
