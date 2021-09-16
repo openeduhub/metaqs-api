@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import (
-    Optional,
     List,
+    Optional,
     Set,
 )
 
@@ -21,7 +20,6 @@ from app.crud import (
     MissingCollectionAttributeFilter,
     MissingMaterialAttributeFilter,
 )
-
 
 CollectionResponseField = Field(
     "CollectionAttribute",

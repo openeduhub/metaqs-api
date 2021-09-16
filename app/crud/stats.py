@@ -1,4 +1,4 @@
-import asyncio
+# import asyncio
 import json
 from collections import defaultdict
 from datetime import datetime
@@ -24,7 +24,6 @@ import app.crud.collection as crud_collection
 from app.core.config import DATA_DIR
 
 # from app.core.util import slugify
-from app.crud.util import StatsNotFoundException
 from app.elastic import Search
 from app.elastic.utils import (
     merge_agg_response,
@@ -171,14 +170,10 @@ async def run_stats(noderef_id: UUID):
     validation_collections_stats = await run_stats_validation_collections(
         root_noderef_id=noderef_id
     )
-    # if not validation_collections_stats:
-    #     validation_collections_stats = [{}]
 
     validation_materials_stats = await run_stats_validation_materials(
         root_noderef_id=noderef_id
     )
-    # if not validation_materials_stats:
-    #     validation_materials_stats = [{}]
 
     derived_at = datetime.now()
 

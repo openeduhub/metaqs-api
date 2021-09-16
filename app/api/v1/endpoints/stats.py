@@ -5,11 +5,9 @@ from typing import (
     Coroutine,
     List,
     Optional,
-    Union,
 )
 from uuid import UUID
 
-from asyncpg import Record
 from fastapi import (
     APIRouter,
     BackgroundTasks,

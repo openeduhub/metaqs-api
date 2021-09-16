@@ -54,13 +54,13 @@ def merge_composite_agg_response(
     return merge(agg.buckets, op=op)
 
 
-def fold_agg_response(
-    agg: AggResponse, key: str, result_field: str = "doc_count"
-) -> dict:
-    return merge(agg)
+# def fold_agg_response(
+#     agg: AggResponse, key: str, result_field: str = "doc_count"
+# ) -> dict:
+#     return merge(agg)
 
 
-def map_reduce_agg_response(
-    agg: AggResponse, key: str, result_field: str = "doc_count"
-) -> dict:
-    return merge(agg)
+# def map_reduce_agg_response(
+#     agg: AggResponse, key: str, result_field: str = "doc_count"
+# ) -> dict:
+#     return merge(agg)

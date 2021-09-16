@@ -34,7 +34,9 @@ class Search(ElasticSearch):
         response = super(Search, self).execute(ignore_cache=ignore_cache)
 
         if DEBUG:
-            logger.debug(f"Response received from elastic:\n{pformat(response.to_dict())}")
+            logger.debug(
+                f"Response received from elastic:\n{pformat(response.to_dict())}"
+            )
 
         context["elastic_queries"] = context.get("elastic_queries", []) + [
             {"query": self.to_dict(), "response": response.to_dict()}
