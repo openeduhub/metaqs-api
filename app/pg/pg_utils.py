@@ -8,6 +8,7 @@ from sqlalchemy.dialects.postgresql import pypostgresql
 
 from app.core.config import (
     DATABASE_URL,
+    DEBUG,
     MAX_CONNECTIONS_COUNT,
     MIN_CONNECTIONS_COUNT,
 )
@@ -60,7 +61,9 @@ def compile_query(query: ClauseElement) -> Tuple[str, list, tuple]:
         for key, val in compiled_params
     ]
 
-    logger.debug(
-        f"Compiled query to postgres:\n{pformat(compiled_query)}\nParams:\n{pformat(params)}"
-    )
+    if DEBUG:
+        logger.debug(
+            f"Compiled query to postgres:\n{pformat(compiled_query)}\nParams:\n{pformat(params)}"
+        )
+
     return compiled_query, params, compiled._result_columns

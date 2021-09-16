@@ -21,7 +21,10 @@ from glom import (
 )
 
 import app.crud.collection as crud_collection
-from app.core.config import DATA_DIR
+from app.core.config import (
+    DATA_DIR,
+    DEBUG,
+)
 
 # from app.core.util import slugify
 from app.elastic import Search
@@ -211,7 +214,9 @@ async def read_stats(
     row = await stats_latest(conn, stat_type, noderef_id, at=at)
 
     if row:
-        logger.debug(f"Read from postgres:\n{pformat(dict(row))}")
+        if DEBUG:
+            logger.debug(f"Read from postgres:\n{pformat(dict(row))}")
+
         return dict(row)
 
 

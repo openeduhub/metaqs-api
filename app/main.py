@@ -21,7 +21,6 @@ from app.core.errors import (
     http_422_error_handler,
     http_error_handler,
 )
-from app.core.logging import logger
 from app.elastic.utils import (
     close_elastic_connection,
     connect_to_elastic,
@@ -59,8 +58,6 @@ class Ping(BaseModel):
     tags=["healthcheck"],
 )
 async def ping_api():
-    if DEBUG:
-        logger.debug(f"Received ping.")
     return {"status": "ok"}
 
 

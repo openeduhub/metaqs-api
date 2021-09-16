@@ -17,6 +17,7 @@ from .fields import (
 
 async def connect_to_elastic():
     logger.debug(f"Attempt to open connection: {ELASTICSEARCH_URL}")
+
     connections.create_connection(
         hosts=[ELASTICSEARCH_URL], timeout=ELASTICSEARCH_TIMEOUT
     )
