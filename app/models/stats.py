@@ -20,6 +20,7 @@ from .oeh_validation import (
 
 
 class StatType(str, Enum):
+    PORTAL_TREE = "portal-tree"
     SEARCH = "search"
     MATERIAL_TYPES = "material-types"
     VALIDATION_COLLECTIONS = "validation-collections"
