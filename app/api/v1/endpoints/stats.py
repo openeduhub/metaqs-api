@@ -31,6 +31,7 @@ import app.crud.stats as crud_stats
 from app.api.auth import authenticated
 from app.core.config import PORTAL_ROOT_ID
 from app.crud.util import StatsNotFoundException
+from app.models.collection import PortalTreeNode
 from app.models.oeh_validation import MaterialFieldValidation
 from app.models.stats import (
     CollectionValidationStats,
@@ -244,6 +245,34 @@ async def read_stats_validation_collection(
         )
         for stat in row["stats"]
     ]
+
+    return response
+
+
+@router.get(
+    "/read-stats/{noderef_id}/portal-tree",
+    response_model=List[PortalTreeNode],
+    status_code=HTTP_200_OK,
+    responses={HTTP_404_NOT_FOUND: {"description": "Collection not found"}},
+    tags=["Statistics"],
+)
+async def read_stats_portal_tree(
+    *,
+    noderef_id: UUID = Depends(noderef_id_param),
+    at: Optional[datetime] = Depends(at_datetime_param),
+    postgres: Postgres = Depends(get_postgres),
+):
+    row = await _read_stats(
+        postgres, stat_type=StatType.PORTAL_TREE, noderef_id=noderef_id, at=at
+    )
+
+    if not row:
+        raise StatsNotFoundException
+
+    if not isinstance(row["stats"], list):
+        row["stats"] = json.loads(row["stats"])
+
+    response = [PortalTreeNode.construct(**node) for node in row["stats"]]
 
     return response
 

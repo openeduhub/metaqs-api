@@ -53,6 +53,7 @@ from .elastic import (
     runtime_mappings_collection_validation,
     search_materials,
 )
+from .util import build_portal_tree
 
 
 async def material_types() -> List[str]:
@@ -168,6 +169,9 @@ async def run_stats_validation_materials(root_noderef_id: UUID) -> List[dict]:
 
 
 async def run_stats(noderef_id: UUID):
+    portals = await crud_collection.get_many_sorted(root_noderef_id=noderef_id)
+    tree = await build_portal_tree(portals=portals, root_noderef_id=noderef_id)
+
     material_types_stats = await run_stats_material_types(root_noderef_id=noderef_id)
 
     validation_collections_stats = await run_stats_validation_collections(
@@ -197,11 +201,13 @@ async def run_stats(noderef_id: UUID):
         # await write_stats_file(row, stat_type=stat_type)
 
     # TODO: encapsulate in transaction
+    await store_stats((StatType.PORTAL_TREE, [json.loads(node.json()) for node in tree]))
     await store_stats((StatType.MATERIAL_TYPES, material_types_stats))
     await store_stats((StatType.VALIDATION_COLLECTIONS, validation_collections_stats))
     await store_stats((StatType.VALIDATION_MATERIALS, validation_materials_stats))
 
     # results = await asyncio.gather([
+    #     store_stats((StatType.PORTAL_TREE, tree)),
     #     store_stats((StatType.MATERIAL_TYPES, material_types_stats)),
     #     store_stats((StatType.VALIDATION_COLLECTIONS, validation_collections_stats[0])),
     #     store_stats((StatType.VALIDATION_MATERIALS, validation_materials_stats[0])),
