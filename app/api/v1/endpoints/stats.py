@@ -1,8 +1,6 @@
 import json
 from datetime import datetime
 from typing import (
-    Callable,
-    Coroutine,
     List,
     Optional,
 )
@@ -25,12 +23,13 @@ from starlette.status import (
 from starlette_context import context
 
 import app.crud.collection as crud_collection
-
-import app.crud.seeds as crud_seeds
 import app.crud.stats as crud_stats
 from app.api.auth import authenticated
 from app.core.config import PORTAL_ROOT_ID
-from app.crud.util import StatsNotFoundException
+from app.crud.util import (
+    StatsNotFoundException,
+    dispatch_portal_tasks,
+)
 from app.models.collection import PortalTreeNode
 from app.models.oeh_validation import MaterialFieldValidation
 from app.models.stats import (
@@ -293,18 +292,6 @@ async def read_stats_timeline(
         return await crud_stats.read_stats_timeline(conn=conn, noderef_id=noderef_id)
 
 
-def _dispatch_portal_tasks(
-    noderef_id: UUID, f: Callable[[UUID], Coroutine], background_tasks: BackgroundTasks,
-):
-    if str(noderef_id) == PORTAL_ROOT_ID:
-        for _, v in crud_collection.PORTALS.items():
-            if v["value"] == PORTAL_ROOT_ID:
-                continue
-            background_tasks.add_task(f, noderef_id=v["value"])
-    else:
-        background_tasks.add_task(f, noderef_id=noderef_id)
-
-
 @router.post(
     "/run-stats",
     dependencies=[Security(authenticated)],
@@ -312,22 +299,8 @@ def _dispatch_portal_tasks(
     tags=["Statistics"],
 )
 async def run_stats(*, background_tasks: BackgroundTasks):
-    _dispatch_portal_tasks(
+    dispatch_portal_tasks(
         noderef_id=PORTAL_ROOT_ID,
         f=crud_stats.run_stats,
-        background_tasks=background_tasks,
-    )
-
-
-@router.post(
-    "/seed-stats",
-    dependencies=[Security(authenticated)],
-    status_code=HTTP_202_ACCEPTED,
-    tags=["Statistics"],
-)
-async def seed_stats(*, background_tasks: BackgroundTasks):
-    _dispatch_portal_tasks(
-        noderef_id=PORTAL_ROOT_ID,
-        f=crud_seeds.seed_stats,
         background_tasks=background_tasks,
     )

@@ -6,11 +6,19 @@ from asyncpg import (
     Connection,
     Record,
 )
-from sqlalchemy import select
+from sqlalchemy import (
+    select,
+    text,
+)
 
 from app.models.stats import StatType
 from .metadata import Stats
 from .pg_utils import compile_query
+
+
+async def stats_clear(conn: Connection) -> Record:
+    compiled_query, params, _ = compile_query(Stats.delete().where(text("1 = 1")))
+    return await conn.fetchrow(compiled_query, *params)
 
 
 async def stats_latest(

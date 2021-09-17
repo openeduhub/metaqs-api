@@ -201,7 +201,9 @@ async def run_stats(noderef_id: UUID):
         # await write_stats_file(row, stat_type=stat_type)
 
     # TODO: encapsulate in transaction
-    await store_stats((StatType.PORTAL_TREE, [json.loads(node.json()) for node in tree]))
+    await store_stats(
+        (StatType.PORTAL_TREE, [json.loads(node.json()) for node in tree])
+    )
     await store_stats((StatType.MATERIAL_TYPES, material_types_stats))
     await store_stats((StatType.VALIDATION_COLLECTIONS, validation_collections_stats))
     await store_stats((StatType.VALIDATION_MATERIALS, validation_materials_stats))
